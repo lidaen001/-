@@ -12,8 +12,10 @@ var startBtn = document.getElementById('startBtn');
 var startPage = document.getElementById('startPage');
 
 init();
+
 function init() {
-    //地图属性
+    //地图属性 Window.getComputedStyle()方法返回一个对象，该对象在应用活动样式表并解析这些值可能包含的任何基本计算后报告元素的所有CSS属性的值。 
+    // 私有的CSS属性值可以通过对象提供的API或通过简单地使用CSS属性名称进行索引来访问。
     this.mapW = parseInt(window.getComputedStyle(content).width);
     this.mapH = parseInt(window.getComputedStyle(content).height);
     this.mapDiv = content;
@@ -27,11 +29,15 @@ function init() {
     this.snake;
     this.snakeW = 20;
     this.snakeH = 20;
-    this.snakeBody = [[3, 0, 'head'], [2, 0, 'body'], [1, 0, 'body']];
+    this.snakeBody = [
+        [2, 0, 'head'],
+        [1, 0, 'body'],
+        [0, 0, 'body']
+    ];
     //游戏属性
     this.direct = 'right';
     this.left = false;
-    this.right = false;
+    this.right = false; //向右就不能向右转或左转
     this.up = true;
     this.down = true;
 
@@ -40,6 +46,7 @@ function init() {
     scoreBox.innerHTML = this.score;
     bindEvent();
 }
+
 function startGame() {
     startPage.style.display = 'none';
     startPaush.style.display = 'block';
@@ -52,18 +59,19 @@ function food() {
     food.style.width = this.foodW + 'px';
     food.style.height = this.foodH + 'px';
     food.style.borderRadius = '50%';
-    this.foodX = Math.floor(Math.random() * (this.mapW / this.foodW));
-    this.foodY = Math.floor(Math.random() * (this.mapH / this.foodH));
-    
+    this.foodX = Math.floor(Math.random() * (this.mapW / this.foodW - 1)); //Math.floor返回小于传入参数的最小整数；向下取整
+    this.foodY = Math.floor(Math.random() * (this.mapH / this.foodH - 1));
+
     food.style.left = this.foodX * this.foodW + 'px';
     food.style.top = this.foodY * this.foodH + 'px';
 
     food.style.position = 'absolute';
     this.mapDiv.appendChild(food).setAttribute('class', 'food');
 }
+
 function snake() {
     for (var i = 0; i < this.snakeBody.length; i++) {
-       var snake = document.createElement('div');
+        var snake = document.createElement('div');
         snake.style.width = this.snakeW + 'px';
         snake.style.height = this.snakeH + 'px';
         snake.style.borderRadius = '50%';
@@ -71,7 +79,7 @@ function snake() {
         snake.style.left = this.snakeBody[i][0] * 20 + 'px';
         snake.style.top = this.snakeBody[i][1] * 20 + 'px';
         snake.classList.add(this.snakeBody[i][2]);
-        this.mapDiv.appendChild(snake).classList.add('snake');   
+        this.mapDiv.appendChild(snake).classList.add('snake');
         switch (this.direct) {
             case 'right':
                 break;
@@ -82,13 +90,14 @@ function snake() {
                 snake.style.transform = 'rotate(180deg)'
                 break;
             case 'down':
-                snake.style.transform ='rotate(90deg)';
+                snake.style.transform = 'rotate(90deg)';
                 break;
             default:
                 break;
         }
     }
 }
+
 function move() {
     //蛇身位置
     for (var i = this.snakeBody.length - 1; i > 0; i--) {
@@ -107,7 +116,7 @@ function move() {
             this.snakeBody[0][0] -= 1;
             break;
         case 'down':
-            this.snakeBody[0][1] += 1;    
+            this.snakeBody[0][1] += 1;
             break;
         default:
             break;
@@ -144,14 +153,13 @@ function move() {
 
     }
     // 判断撞到边界
-    if (this.snakeBody[0][1] < 0 || this.snakeBody[0][1] >= this.mapH / this.snakeH) {
+    if (this.snakeBody[0][1] < 0 || this.snakeBody[0][1] >= Math.floor(this.mapH / this.snakeH)) {
         this.reloadGame();
     }
-    if (this.snakeBody[0][0] < 0 || this.snakeBody[0][0] >= this.mapW / this.snakeW) {
+    if (this.snakeBody[0][0] < 0 || this.snakeBody[0][0] >= Math.floor(this.mapW / this.snakeW)) {
         this.reloadGame();
     }
     var snakeHeaderX = this.snakeBody[0][0];
-
     var snakeHeaderY = this.snakeBody[0][1];
     for (var i = 1; i < this.snakeBody.length; i++) {
         var snakeBodyX = this.snakeBody[i][0];
@@ -211,7 +219,11 @@ function reloadGame() {
     removeClass('food');
     clearInterval(snakeMove);
     startPaush.setAttribute('src', './img/start.png');
-    this.snakeBody = [[3, 2, 'head'], [2, 2, 'body'], [1, 2, 'body']];
+    this.snakeBody = [
+        [2, 2, 'head'],
+        [1, 2, 'body'],
+        [0, 2, 'body']
+    ];
     this.direct = 'right';
     this.left = false;
     this.right = false;
@@ -233,8 +245,8 @@ function removeClass(calssName) {
 }
 
 function bindEvent() {
-    startBtn.onclick = function(){
-        startAndPauseGame();        
+    startBtn.onclick = function () {
+        startAndPauseGame();
     }
     startPaush.onclick = function () {
         startAndPauseGame();
@@ -271,4 +283,3 @@ function startAndPauseGame() {
         startPauseBool = true;
     }
 }
-

@@ -17,12 +17,16 @@
     width:200px;
     background-image: url('img/startGame.png');
     background-size:100% 100%;
-    cursor: pointer;
     left:0;
     top:0;
     right:0;
     bottom:0;
     margin:auto;
+    cursor: pointer;
+}
+.startPaush{
+    cursor: pointer;
+
 }
 .wrapper{
     height:750px;
@@ -74,7 +78,7 @@
     left:10%;
     /* top:244px; */
     top:34%;
-    /* border:1px solid black;  */
+    border:1px solid black; 
 }
 .loser{
     display:none;
