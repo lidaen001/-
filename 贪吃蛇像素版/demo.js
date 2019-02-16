@@ -1,16 +1,16 @@
 var snakeMove;
 var startGameBool = true;
 var startPauseBool = true;
-var speed = 200;
-var scoreBox = document.getElementById('score');
+var speed = 100;
+var scoreBox = document.getElementById('scoreNum');
 var content = document.getElementById('content');
-var lose = document.getElementById('loser');
+var lose = document.getElementById('lose');
 var loserScore = document.getElementById('loserScore');
-var startPaush = document.getElementById('startPaush');
+var pause = document.getElementById('pause');
 var closeBtn = document.getElementById('close');
 var startBtn = document.getElementById('startBtn');
-var startPage = document.getElementById('startPage');
-
+var start = document.getElementById('start');
+var btn = document.getElementById('btn');
 init();
 
 function init() {
@@ -48,8 +48,8 @@ function init() {
 }
 
 function startGame() {
-    startPage.style.display = 'none';
-    startPaush.style.display = 'block';
+    start.style.display = 'none';
+    pause.style.display = 'block';
     food();
     snake();
 }
@@ -218,7 +218,9 @@ function reloadGame() {
     removeClass('snake');
     removeClass('food');
     clearInterval(snakeMove);
-    startPaush.setAttribute('src', './img/start.png');
+    start.style.display = 'block';
+    pause.style.display = 'none';
+    // startPaush.setAttribute('src', './img/start.png');
     this.snakeBody = [
         [2, 2, 'head'],
         [1, 2, 'body'],
@@ -245,26 +247,30 @@ function removeClass(calssName) {
 }
 
 function bindEvent() {
-    startBtn.onclick = function () {
+    start.onclick = function () {
         startAndPauseGame();
     }
-    startPaush.onclick = function () {
+    pause.onclick = function () {
         startAndPauseGame();
     }
     closeBtn.onclick = function () {
         lose.style.display = 'none';
+        start.style.display = 'block';
+        pause.style.display = 'none';
     }
+
 }
 
 //开始和暂停游戏 逻辑封装
 function startAndPauseGame() {
     if (startPauseBool) {
         if (startGameBool) {
-            
             startGame();
             startGameBool = false;
         }
-        startPaush.setAttribute('src', './img/pause.png');
+        pause.style.display = 'block';
+        start.style.display = 'none';
+        // startPaush.setAttribute('src', './img/pause.png');
         snakeMove = setInterval(function () {
             move();
         }, speed);
@@ -275,7 +281,8 @@ function startAndPauseGame() {
         startPauseBool = false;
     } else {
         //暂停
-        startPaush.setAttribute('src', './img/start.png');
+        start.style.display = 'block';
+        pause.style.display = 'none';
         clearInterval(snakeMove);
         document.onkeydown = function (e) {
             e.returnValue = false;
